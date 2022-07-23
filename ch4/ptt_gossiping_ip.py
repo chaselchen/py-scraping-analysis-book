@@ -21,7 +21,7 @@ def get_web_page(url):
 
 
 def get_articles(dom, date):
-    soup = BeautifulSoup(dom, 'html5lib')
+    soup = BeautifulSoup(dom, 'html.parser')
 
     # 取得上一頁的連結
     paging_div = soup.find('div', 'btn-group btn-group-paging')
@@ -49,7 +49,8 @@ def get_articles(dom, date):
             if d.find('a'):  # 有超連結，表示文章存在，未被刪除
                 href = d.find('a')['href']
                 title = d.find('a').text
-                author = d.find('div', 'author').text if d.find('div', 'author') else ''
+                author = d.find('div', 'author').text if d.find(
+                    'div', 'author') else ''
                 articles.append({
                     'title': title,
                     'href': href,
@@ -81,11 +82,16 @@ def get_country(ip):
 if __name__ == '__main__':
     print('取得今日文章列表...')
     current_page = get_web_page(PTT_URL + '/bbs/Gossiping/index.html')
+    i = 1
     if current_page:
         articles = []  # 全部的今日文章
-        today = time.strftime('%m/%d').lstrip('0')  # 今天日期, 去掉開頭的 '0' 以符合 PTT 網站格式
-        current_articles, prev_url = get_articles(current_page, today)  # 目前頁面的今日文章
+        # 今天日期, 去掉開頭的 '0' 以符合 PTT 網站格式
+        today = time.strftime('%m/%d').lstrip('0')
+        current_articles, prev_url = get_articles(
+            current_page, today)  # 目前頁面的今日文章
         while current_articles:  # 若目前頁面有今日文章則加入 articles，並回到上一頁繼續尋找是否有今日文章
+            print(i)
+            i += 1
             articles += current_articles
             current_page = get_web_page(PTT_URL + prev_url)
             current_articles, prev_url = get_articles(current_page, today)

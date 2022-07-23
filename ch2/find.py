@@ -42,7 +42,8 @@ def main():
         # 方法二, 使用 tag 定位
         #print(div.h6.text.strip(), div.h4.a.text.strip(), div.p.text.strip())
         # 方法三, 使用 .stripped_strings
-        print([s for s in div.stripped_strings])
+        # print([s for s in div.stripped_strings])
+        print([s for s in div.stripped_strings ])
 
 
 if __name__ == '__main__':

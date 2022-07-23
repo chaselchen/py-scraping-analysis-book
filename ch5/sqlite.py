@@ -1,5 +1,6 @@
 import sqlite3
 import csv
+import os
 
 
 def execute_db(fname, sql_cmd):
@@ -20,7 +21,8 @@ def select_db(fname, sql_cmd):
 
 
 if __name__ == '__main__':
-    db_name = 'db.sqlite'
+    root = f'{os.path.dirname(__file__)}/'
+    db_name = f'{root}/db.sqlite'
     print('建立資料庫及資料表')
     cmd = 'CREATE TABLE record (id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT, price INTEGER, shop TEXT)'
     execute_db(db_name, cmd)
@@ -34,10 +36,11 @@ if __name__ == '__main__':
     execute_db(db_name, cmd)
 
     print('插入多筆資料')
-    with open('ezprice.csv', 'r', encoding='utf-8') as f:
+    with open(f'{root}ezprice.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            cmd = 'INSERT INTO record (item, price, shop) VALUES ("%s", %d, "%s")' % (row['品項'], int(row['價格']), row['商家'])
+            cmd = 'INSERT INTO record (item, price, shop) VALUES ("%s", %d, "%s")' % (
+                row['品項'], int(row['價格']), row['商家'])
             execute_db(db_name, cmd)
 
     print('選擇資料')

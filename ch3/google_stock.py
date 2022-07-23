@@ -19,16 +19,19 @@ def get_web_page(url, stock_id):
 
 
 def get_stock_info(dom):
-    soup = BeautifulSoup(dom, 'html5lib')
+    soup = BeautifulSoup(dom, 'html.parser')
     stock = dict()
 
     sections = soup.find_all('g-card-section')
 
     # 第 2 個 g-card-section, 取出公司名及即時股價資訊
     stock['name'] = sections[1].div.text
-    spans = sections[1].find_all('div', recursive=False)[1].find_all('span', recursive=False)
-    stock['current_price'] = spans[0].text
-    stock['current_change'] = spans[1].text
+    spans = sections[1].find_all('div', recursive=False)
+
+    spans = sections[1].find_all('div', recursive=False)[
+        1].find_all('span', recursive=2)
+    stock['current_price'] = spans[2].text
+    stock['current_change'] = spans[5].text + spans[6].text
 
     # 第 4 個 g-card-section, 有左右兩個 table 分別存放股票資訊
     for table in sections[3].find_all('table'):
